@@ -190,12 +190,14 @@ function renderSchedules(schedules) {
     else if (s.dday <= 7) badgeClass = 'dday-urgent';
     else if (s.dday <= 30) badgeClass = 'dday-soon';
     const ddayText = s.dday === 0 ? 'D-day' : `D-${s.dday}`;
+    const title = s.title_ko || s.title;
+    const detail = s.detail_ko || s.detail;
     return `
       <div class="schedule-item">
         <div class="dday-badge ${badgeClass}">${ddayText}</div>
         <div>
-          <div class="schedule-title">${s.title}</div>
-          ${s.detail ? `<div class="schedule-detail">${s.detail}</div>` : ''}
+          <div class="schedule-title">${title}</div>
+          ${detail ? `<div class="schedule-detail">${detail}</div>` : ''}
         </div>
       </div>`;
   }).join('');
