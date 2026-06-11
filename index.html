@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Choco Hub</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f5f5; color: #1a1a1a; min-height: 100vh; }
+.container { max-width: 1100px; margin: 0 auto; padding: 2rem 1.5rem; }
+.header { margin-bottom: 1.5rem; }
+.header p.sub { font-size: 12px; color: #888; letter-spacing: 0.05em; }
+.header h1 { font-size: 22px; font-weight: 500; margin-top: 4px; }
+.grid4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 12px; }
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+.stat-card { background: #efefef; border-radius: 8px; padding: 1rem; }
+.stat-card .label { font-size: 12px; color: #888; margin-bottom: 6px; }
+.stat-card .value { font-size: 24px; font-weight: 500; }
+.stat-card .dday { font-size: 13px; color: #d97706; font-weight: 400; margin-left: 4px; }
+.dash-card { background: #fff; border: 0.5px solid #e0e0e0; border-radius: 12px; padding: 1.1rem; cursor: pointer; text-decoration: none; color: inherit; display: block; transition: border-color 0.15s; }
+.dash-card:hover { border-color: #bbb; }
+.icon-wrap { width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-bottom: 10px; font-size: 18px; }
+.icon-info { background: #dbeafe; color: #2563eb; }
+.icon-warning { background: #fef3c7; color: #d97706; }
+.icon-success { background: #d1fae5; color: #059669; }
+.icon-danger { background: #fee2e2; color: #dc2626; }
+.dash-card .name { font-size: 14px; font-weight: 500; margin-bottom: 3px; }
+.dash-card .url { font-size: 11px; color: #888; margin-bottom: 8px; }
+.badge-on { font-size: 11px; padding: 2px 8px; border-radius: 99px; background: #d1fae5; color: #059669; display: inline-block; }
+.panel { background: #fff; border: 0.5px solid #e0e0e0; border-radius: 12px; padding: 1.1rem; margin-bottom: 12px; }
+.panel-title { font-size: 13px; font-weight: 500; margin-bottom: 12px; }
+.donut-wrap { display: flex; align-items: center; gap: 16px; }
+.legend-item { display: flex; align-items: center; gap: 6px; margin-bottom: 6px; }
+.legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.legend-label { font-size: 12px; color: #888; flex: 1; }
+.legend-val { font-size: 12px; font-weight: 500; }
+.schedule-item { display: flex; align-items: flex-start; gap: 10px; padding-bottom: 8px; border-bottom: 0.5px solid #e0e0e0; margin-bottom: 8px; }
+.schedule-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+.dday-badge { min-width: 38px; text-align: center; border-radius: 6px; padding: 3px 0; font-size: 11px; font-weight: 500; }
+.dday-urgent { background: #fee2e2; color: #dc2626; }
+.dday-soon { background: #fef3c7; color: #d97706; }
+.dday-normal { background: #dbeafe; color: #2563eb; }
+.dday-today { background: #d1fae5; color: #059669; }
+.schedule-title { font-size: 13px; font-weight: 500; }
+.schedule-detail { font-size: 11px; color: #888; margin-top: 2px; }
+.ad-grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 8px; }
+.ad-grid2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+.ad-card { padding: 10px 12px; background: #f5f5f5; border-radius: 8px; }
+.ad-card .ad-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; }
+.ad-card .ad-name { font-size: 13px; font-weight: 500; }
+.badge-sm { font-size: 11px; padding: 2px 7px; border-radius: 99px; }
+.badge-demand { background: #dbeafe; color: #2563eb; font-size: 10px; padding: 1px 6px; border-radius: 99px; display: inline-block; margin-top: 5px; }
+.badge-brand { background: #fef3c7; color: #d97706; font-size: 10px; padding: 1px 6px; border-radius: 99px; display: inline-block; margin-top: 5px; }
+.ad-stat { font-size: 12px; color: #888; margin-bottom: 3px; }
+.ad-stat span { color: #1a1a1a; font-weight: 500; }
+.loading { color: #888; font-size: 13px; padding: 2rem 0; text-align: center; }
+.error { color: #dc2626; font-size: 13px; }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <p class="sub">CHOCO RENT-A-CAR DUBAI</p>
+    <h1>관리 허브</h1>
+  </div>
+
+  <div class="grid4" id="stat-cards">
+    <div class="stat-card"><div class="label">총 클릭</div><div class="value" id="s-clicks">-</div></div>
+    <div class="stat-card"><div class="label">총 문의</div><div class="value" id="s-inquiries">-</div></div>
+    <div class="stat-card"><div class="label">전환율</div><div class="value" id="s-conv">-</div></div>
+    <div class="stat-card"><div class="label">진행 중 소송</div><div class="value" id="s-legal">-</div></div>
+  </div>
+
+  <div class="grid4">
+    <a class="dash-card" href="https://chocorentdubai.github.io/dubai-chatbot/" target="_blank">
+      <div class="icon-wrap icon-info"><i class="ti ti-robot"></i></div>
+      <div class="name">두바이 챗봇</div>
+      <div class="url">dubai-chatbot</div>
+      <span class="badge-on">운영중</span>
+    </a>
+    <a class="dash-card" href="https://chocorentdubai.github.io/choco-fakedoor/" target="_blank">
+      <div class="icon-wrap icon-warning"><i class="ti ti-car"></i></div>
+      <div class="name">페이크도어 테스트</div>
+      <div class="url">choco-fakedoor</div>
+      <span class="badge-on">운영중</span>
+    </a>
+    <a class="dash-card" href="https://chocorentdubai.github.io/shiela-report/" target="_blank">
+      <div class="icon-wrap icon-success"><i class="ti ti-clipboard-list"></i></div>
+      <div class="name">실라 작업일지</div>
+      <div class="url">shiela-report</div>
+      <span class="badge-on">운영중</span>
+    </a>
+    <a class="dash-card" href="https://chocorentdubai.github.io/legal-tracker/" target="_blank">
+      <div class="icon-wrap icon-danger"><i class="ti ti-scale"></i></div>
+      <div class="name">법률 케이스 트래커</div>
+      <div class="url">legal-tracker</div>
+      <span class="badge-on">운영중</span>
+    </a>
+  </div>
+
+  <div class="grid2">
+    <div class="panel">
+      <div class="panel-title">플랫폼별 클릭 분포</div>
+      <div class="donut-wrap">
+        <canvas id="donut" width="90" height="90" style="flex-shrink:0;"></canvas>
+        <div style="flex:1;" id="legend"></div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-title">주요 일정</div>
+      <div id="schedule-list"><div class="loading">불러오는 중...</div></div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-title">광고 현황</div>
+    <div class="ad-grid3" id="ad-demand"></div>
+    <div class="ad-grid2" id="ad-brand"></div>
+  </div>
+</div>
+
+<script>
+const API_URL = 'https://script.google.com/macros/s/AKfycbwHqtRE6r5ER6_mEcN1jA8PkMYVhWMbp1bg1bEg27Kotubk4G1WWROUE91W-FdF1HTemg/exec';
+
+fetch(API_URL)
+  .then(r => r.json())
+  .then(data => {
+    renderStats(data);
+    renderDonut(data.fakedoor);
+    renderSchedules(data.schedules);
+    renderAds(data.fakedoor);
+  })
+  .catch(e => {
+    document.getElementById('s-clicks').textContent = '오류';
+    console.error(e);
+  });
+
+function renderStats(data) {
+  const fd = data.fakedoor;
+  const lg = data.legal;
+  document.getElementById('s-clicks').textContent = fd.totalClicks.toLocaleString();
+  document.getElementById('s-inquiries').textContent = fd.totalInquiries.toLocaleString();
+  document.getElementById('s-conv').textContent = fd.conversionRate + '%';
+  const legalEl = document.getElementById('s-legal');
+  let legalHtml = lg.inProgress + '건';
+  if (lg.nextDday !== null) legalHtml += `<span class="dday">D-${lg.nextDday}</span>`;
+  legalEl.innerHTML = legalHtml;
+}
+
+function renderDonut(fd) {
+  const canvas = document.getElementById('donut');
+  const ctx = canvas.getContext('2d');
+  const total = fd.totalClicks || 1;
+  const platforms = [
+    { name: 'Facebook', val: fd.platformClicks['Facebook Marketplace'], color: '#378ADD' },
+    { name: 'Locanto', val: fd.platformClicks['Locanto'], color: '#1D9E75' },
+    { name: 'YallaMotor', val: fd.platformClicks['YallaMotor'], color: '#BA7517' }
+  ];
+  const cx = 45, cy = 45, r = 32, sw = 14;
+  let offset = -Math.PI / 2;
+  platforms.forEach(p => {
+    const angle = (p.val / total) * Math.PI * 2;
+    ctx.beginPath();
+    ctx.arc(cx, cy, r, offset, offset + angle);
+    ctx.strokeStyle = p.color;
+    ctx.lineWidth = sw;
+    ctx.stroke();
+    offset += angle;
+  });
+  const legend = document.getElementById('legend');
+  legend.innerHTML = platforms.map(p => `
+    <div class="legend-item">
+      <div class="legend-dot" style="background:${p.color}"></div>
+      <span class="legend-label">${p.name}</span>
+      <span class="legend-val">${total > 0 ? Math.round(p.val/total*100) : 0}%</span>
+    </div>
+  `).join('');
+}
+
+function renderSchedules(schedules) {
+  const el = document.getElementById('schedule-list');
+  if (!schedules || schedules.length === 0) {
+    el.innerHTML = '<div style="font-size:13px;color:#888;">등록된 일정이 없습니다</div>';
+    return;
+  }
+  el.innerHTML = schedules.map(s => {
+    let badgeClass = 'dday-normal';
+    if (s.dday === 0) badgeClass = 'dday-today';
+    else if (s.dday <= 7) badgeClass = 'dday-urgent';
+    else if (s.dday <= 30) badgeClass = 'dday-soon';
+    const ddayText = s.dday === 0 ? 'D-day' : `D-${s.dday}`;
+    return `
+      <div class="schedule-item">
+        <div class="dday-badge ${badgeClass}">${ddayText}</div>
+        <div>
+          <div class="schedule-title">${s.title}</div>
+          ${s.detail ? `<div class="schedule-detail">${s.detail}</div>` : ''}
+        </div>
+      </div>`;
+  }).join('');
+}
+
+function renderAds(fd) {
+  const platforms = [
+    { name: 'Facebook Marketplace', clicks: fd.platformClicks['Facebook Marketplace'], inquiries: fd.platformInquiries['Facebook Marketplace'] },
+    { name: 'YallaMotor', clicks: fd.platformClicks['YallaMotor'], inquiries: fd.platformInquiries['YallaMotor'] },
+    { name: 'Locanto', clicks: fd.platformClicks['Locanto'], inquiries: fd.platformInquiries['Locanto'] }
+  ];
+  document.getElementById('ad-demand').innerHTML = platforms.map(p => `
+    <div class="ad-card">
+      <div class="ad-top">
+        <span class="ad-name">${p.name}</span>
+        <span class="badge-sm badge-on">운영중</span>
+      </div>
+      <div class="ad-stat">클릭 <span>${p.clicks.toLocaleString()}</span></div>
+      <div class="ad-stat">문의 <span>${p.inquiries}</span></div>
+      <span class="badge-demand">수요테스트</span>
+    </div>`).join('');
+
+  document.getElementById('ad-brand').innerHTML = `
+    <div class="ad-card">
+      <div class="ad-top">
+        <span class="ad-name">TotalDubai</span>
+        <span class="badge-sm badge-on">운영중</span>
+      </div>
+      <span class="badge-brand">브랜드광고</span>
+    </div>
+    <div class="ad-card">
+      <div class="ad-top">
+        <span class="ad-name">Expatriates</span>
+        <span class="badge-sm badge-on">운영중</span>
+      </div>
+      <span class="badge-brand">브랜드광고</span>
+    </div>`;
+}
+</script>
+</body>
+</html>
