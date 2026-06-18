@@ -13,6 +13,8 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 .header p.sub { font-size: 12px; color: #888; letter-spacing: 0.05em; }
 .header h1 { font-size: 22px; font-weight: 500; margin-top: 4px; }
 .grid4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 12px; }
+.grid5 { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-bottom: 12px; }
+.icon-purple { background: #ede9fe; color: #7c3aed; }
 .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
 .stat-card { background: #efefef; border-radius: 8px; padding: 1rem; }
 .stat-card .label { font-size: 12px; color: #888; margin-bottom: 6px; }
@@ -72,7 +74,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
     <div class="stat-card"><div class="label">진행 중 사건</div><div class="value" id="s-legal">-</div></div>
   </div>
 
-  <div class="grid4">
+  <div class="grid5">
     <a class="dash-card" href="https://chocorentdubai.github.io/dubai-chatbot/" target="_blank">
       <div class="icon-wrap icon-info"><i class="ti ti-robot"></i></div>
       <div class="name">두바이 챗봇</div>
@@ -89,6 +91,12 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
       <div class="icon-wrap icon-success"><i class="ti ti-clipboard-list"></i></div>
       <div class="name">실라 작업일지</div>
       <div class="url">shiela-report</div>
+      <span class="badge-on">운영중</span>
+    </a>
+    <a class="dash-card" href="https://chocorentdubai.github.io/choco-crm/" target="_blank">
+      <div class="icon-wrap icon-purple"><i class="ti ti-users"></i></div>
+      <div class="name">고객 CRM</div>
+      <div class="url">choco-crm</div>
       <span class="badge-on">운영중</span>
     </a>
     <a class="dash-card" href="https://chocorentdubai.github.io/legal-tracker/" target="_blank">
