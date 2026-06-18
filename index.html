@@ -46,7 +46,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 .dday-today { background: #d1fae5; color: #059669; }
 .schedule-title { font-size: 13px; font-weight: 500; }
 .schedule-detail { font-size: 11px; color: #888; margin-top: 2px; }
-.ad-grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 8px; }
+.ad-grid3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 8px; margin-bottom: 8px; }
 .ad-grid2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
 .ad-card { padding: 10px 12px; background: #f5f5f5; border-radius: 8px; }
 .ad-card .ad-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; }
@@ -156,15 +156,15 @@ function renderStats(data) {
   legalEl.innerHTML = legalHtml;
 }
 
+const PLATFORM_COLORS = ['#378ADD', '#1D9E75', '#BA7517', '#DC2626', '#7C3AED', '#DB2777', '#0EA5E9', '#65A30D'];
+
 function renderDonut(fd) {
   const canvas = document.getElementById('donut');
   const ctx = canvas.getContext('2d');
   const total = fd.totalClicks || 1;
-  const platforms = [
-    { name: 'Facebook', val: fd.platformClicks['Facebook Marketplace'], color: '#378ADD' },
-    { name: 'Locanto', val: fd.platformClicks['Locanto'], color: '#1D9E75' },
-    { name: 'YallaMotor', val: fd.platformClicks['YallaMotor'], color: '#BA7517' }
-  ];
+  const platforms = Object.keys(fd.platformClicks).map((name, i) => ({
+    name, val: fd.platformClicks[name], color: PLATFORM_COLORS[i % PLATFORM_COLORS.length]
+  }));
   const cx = 45, cy = 45, r = 32, sw = 14;
   let offset = -Math.PI / 2;
   platforms.forEach(p => {
@@ -212,11 +212,9 @@ function renderSchedules(schedules) {
 }
 
 function renderAds(fd) {
-  const platforms = [
-    { name: 'Facebook Marketplace', clicks: fd.platformClicks['Facebook Marketplace'], inquiries: fd.platformInquiries['Facebook Marketplace'] },
-    { name: 'YallaMotor', clicks: fd.platformClicks['YallaMotor'], inquiries: fd.platformInquiries['YallaMotor'] },
-    { name: 'Locanto', clicks: fd.platformClicks['Locanto'], inquiries: fd.platformInquiries['Locanto'] }
-  ];
+  const platforms = Object.keys(fd.platformClicks).map(name => ({
+    name, clicks: fd.platformClicks[name], inquiries: fd.platformInquiries[name] || 0
+  }));
   document.getElementById('ad-demand').innerHTML = platforms.map(p => `
     <div class="ad-card">
       <div class="ad-top">
